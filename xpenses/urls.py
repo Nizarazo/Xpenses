@@ -32,8 +32,15 @@ def lucky(request):
     })
 
 
+def hello(request, name):  # view function
+    return HttpResponse("Hello <b>{}</b>".format(
+        name.title(),
+    ))
+
+
 urlpatterns = [
     url(r'^$', home),
     url(r'^api/$', lucky),
+    url(r'^hello/([a-zA-Z]+)/$', hello),
     url(r'^admin/', admin.site.urls),
 ]

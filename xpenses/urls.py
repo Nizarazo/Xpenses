@@ -13,9 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import random
+
 from django.conf.urls import url
 from django.contrib import admin
+from django.http import HttpResponse
+from django.http import JsonResponse
+
+
+def home(request):  # view function
+    # assert False, "KABOOM!!!!"
+    return HttpResponse("Hello <b>World!</b>")
+
+
+def lucky(request):
+    return JsonResponse({
+        'lucky': random.randint(1, 10),
+    })
+
 
 urlpatterns = [
+    url(r'^$', home),
+    url(r'^api/$', lucky),
     url(r'^admin/', admin.site.urls),
 ]

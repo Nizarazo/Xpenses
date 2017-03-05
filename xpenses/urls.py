@@ -27,41 +27,18 @@ def home(request):  # view function
     return HttpResponse("Hello <b>World!</b>")
 
 
-def lucky(request):
-    return JsonResponse({
-        'lucky': random.randint(1, 10),
-    })
-
-
-def hello(request, name):
-    return HttpResponse("Hello <b>{}</b>".format(name.title()))
-
-
-def add(request, x, y):
-    return HttpResponse("{} + {} = <b>{}</b>".format(
-        x, y, int(x) + int(y)
-    ))
-
-
-def calendar_month(request, year, month):
-    # TODO: check month, year
-    return HttpResponse(calendar.HTMLCalendar().formatmonth(
-        int(year), int(month)
-    ))
-
-
-def calendar_year(request, year):
-    s = " ".join('<a href="{0}/">{0}</a>'.format(i)
-                 for i in range(1, 13))
-    return HttpResponse(s)
+def hello_lucky(request, name, number):
+    return HttpResponse(
+        "Hello <b>{}</b> Your lucky number is <b>{}</b>".format(
+            name.title(),
+            number,
+        ))
 
 
 urlpatterns = [
     url(r'^$', home),
-    url(r'^api/$', lucky),
-    url(r'^hello/([a-zA-Z]+)/$', hello),
-    url(r'^add/([0-9]+)/([0-9]+)/$', add),
-    url(r'^calendar/([0-9]{4})/$', calendar_year),
-    url(r'^calendar/([0-9]{4})/([0-9]{1,2})/$', calendar_month),
+    url(r'^hello/([a-zA-Z]+)/$', hello_lucky, kwargs={'number': 99}),
+    url(r'^hello/([a-zA-Z]+)/([0-9]+)/$', hello_lucky),
+    url(r'^hello/(?P<number>[0-9]+)/(?P<name>[a-zA-Z]+)/$', hello_lucky),
     url(r'^admin/', admin.site.urls),
 ]

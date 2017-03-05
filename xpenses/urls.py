@@ -27,6 +27,12 @@ def home(request):  # view function
     return HttpResponse("Hello <b>World!</b>")
 
 
+def add(request, x, y):
+    return HttpResponse("{} + {} = <b>{}</b>".format(
+        x, y, int(x) + int(y)
+    ))
+
+
 def hello_lucky(request, name, number):
     return HttpResponse(
         "Hello <b>{}</b> Your lucky number is <b>{}</b>".format(
@@ -37,6 +43,7 @@ def hello_lucky(request, name, number):
 
 urlpatterns = [
     url(r'^$', home),
+    url(r'^add/([0-9]+)/([0-9]+)/$', add),
     url(r'^hello/([a-zA-Z]+)/$', hello_lucky, kwargs={'number': 99}),
     url(r'^hello/([a-zA-Z]+)/([0-9]+)/$', hello_lucky),
     url(r'^hello/(?P<number>[0-9]+)/(?P<name>[a-zA-Z]+)/$', hello_lucky),

@@ -1,17 +1,19 @@
-{% load humanize %}
+{% load humanize staticfiles %}
 
-<h1>Expenses</h1>
+<link rel="stylesheet" href="{% static "style.css" %}"/>
 
-<p>
+<h1>Expenses <span>for today</span></h1>
+
+<p id="list-info">
     {{ object_list.count }} expenses, total: ${{ total|intcomma }}
 </p>
 
 <ul>
     {% for object in object_list %}
-        <li>
+        <li class="{% cycle "first" "second" %} {% cycle "a" "b" "c" %}">
             <a href="{% url "expenses:detail" object.id %}">{{ object.title }}</a>:
             ${{ object.amount }}
-            (<span title="{{ object.date }}">{{ object.date|naturalday }}</span>)
+            (<span class="date strange terrible" title="{{ object.date }}">{{ object.date|naturalday }}</span>)
         </li>
     {% endfor %}
 </ul>

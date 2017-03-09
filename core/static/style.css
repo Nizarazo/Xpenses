@@ -1,0 +1,23 @@
+li {
+    background: pink;
+    border: 1px solid black;
+    padding: 3px;
+    margin-bottom: 3px;
+    list-style: none;
+}
+
+#list-info {
+    color: limegreen;
+}
+
+.date {
+    cursor: crosshair;
+}
+
+.first {
+    background: purple;
+}
+
+.second.c {
+    color: yellow;
+}

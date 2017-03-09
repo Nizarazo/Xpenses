@@ -3,8 +3,13 @@ from django.shortcuts import render, get_object_or_404
 from . import models
 
 
-def expense_list(request):
-    qs = models.Expense.objects.all()
+def expense_list(request, year=None, month=None):
+    qs = models.Expense.objects.order_by('-date', '-id')
+
+    if year:
+        qs = qs.filter(date__year=year)
+    if month:
+        qs = qs.filter(date__month=month)
 
     total = sum(o.amount for o in qs)  # TODO: use aggregate instead
 

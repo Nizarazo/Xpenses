@@ -1,12 +1,11 @@
-Hello <b>World</b>!
-
-<p>Age: {{ age }}</p>
-<p>Color: {{ color }}</p>
-
-<p>To Buy: {{ to_buy }}</p>
+<h1>Expenses</h1>
 
 <ul>
-    {% for item in to_buy %}
-        <li>{{ item }}</li>
+    {% for object in object_list %}
+        <li>
+            <a href="{{ object.id }}/">{{ object.title }}</a>:
+            {{ object.amount }}
+            ({{ object.date }})
+        </li>
     {% endfor %}
 </ul>

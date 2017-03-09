@@ -1,18 +1,27 @@
-<h1>Expense #{{ object.id }}: {{ object.title }}</h1>
+{% extends "base.html" %}
+{% load humanize %}
 
-<ul>
-    <li>
-        <b>Date:</b>
-        {{ object.date }}
-    </li>
-    <li>
-        <b>Amount:</b>
-        {{ object.amount }}
-    </li>
-    <li>
-        <b>Comments:</b>
-        {{ object.comments|linebreaksbr }}
-    </li>
-</ul>
+{% block page_title %}
+    Expense #{{ object.id }}
+{% endblock %}
 
-<a href="{% url "expenses:list" %}">Back</a>
+{% block content %}
+    <h1>Expense #{{ object.id }}: {{ object.title }}</h1>
+
+    <ul>
+        <li>
+            <b>Date:</b>
+            {{ object.date }}
+        </li>
+        <li>
+            <b>Amount:</b>
+            {{ object.amount }}
+        </li>
+        <li>
+            <b>Comments:</b>
+            {{ object.comments|linebreaksbr }}
+        </li>
+    </ul>
+
+    <a href="{% url "expenses:list" %}">Back</a>
+{% endblock %}

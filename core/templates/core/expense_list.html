@@ -1,19 +1,28 @@
-{% load humanize staticfiles %}
+{% extends "base.html" %}
+{% load humanize %}
 
-<link rel="stylesheet" href="{% static "style.css" %}"/>
+{% block page_title %}
+    Expense List
+{% endblock %}
 
-<h1>Expenses <span>for today</span></h1>
+{% block content %}
 
-<p id="list-info">
-    {{ object_list.count }} expenses, total: ${{ total|intcomma }}
-</p>
+    <h1>Expenses <span>for today</span></h1>
 
-<ul>
-    {% for object in object_list %}
-        <li class="{% cycle "first" "second" %} {% cycle "a" "b" "c" %}">
-            <a href="{% url "expenses:detail" object.id %}">{{ object.title }}</a>:
-            ${{ object.amount }}
-            (<span class="date strange terrible" title="{{ object.date }}">{{ object.date|naturalday }}</span>)
-        </li>
-    {% endfor %}
-</ul>
+    <p id="list-info">
+        <span class="glyphicon glyphicon-tree-conifer"></span>
+        {{ object_list.count }} expenses, total: ${{ total|intcomma }}
+    </p>
+
+    <ul class="list-group">
+        {% for object in object_list %}
+            <li class="list-group-item">
+                <span class="badge"
+                      title="{{ object.date }}">{{ object.date|naturalday }}</span>
+                <a href="{% url "expenses:detail" object.id %}">{{ object.title }}</a>:
+                ${{ object.amount }}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -9,7 +9,7 @@
 <ul>
     {% for object in object_list %}
         <li>
-            <a href="{{ object.id }}/">{{ object.title }}</a>:
+            <a href="{% url "expenses:detail" object.id %}">{{ object.title }}</a>:
             ${{ object.amount }}
             (<span title="{{ object.date }}">{{ object.date|naturalday }}</span>)
         </li>

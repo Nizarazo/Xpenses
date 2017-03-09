@@ -1,0 +1,12 @@
+Hello <b>World</b>!
+
+<p>Age: {{ age }}</p>
+<p>Color: {{ color }}</p>
+
+<p>To Buy: {{ to_buy }}</p>
+
+<ul>
+    {% for item in to_buy %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>

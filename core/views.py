@@ -4,6 +4,10 @@ from . import models
 
 
 def expense_list(request, year=None, month=None):
+
+    if 'q' in request.GET:
+        assert False, request.GET['q']
+
     qs = models.Expense.objects.order_by('-date', '-id')
 
     if year:

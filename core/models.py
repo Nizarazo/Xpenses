@@ -8,3 +8,10 @@ class Expense(models.Model):
     title = models.CharField(max_length=300)
     comments = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return "[#{}] {} {:,}@{}".format(
+            self.id,
+            self.title,
+            self.amount,
+            self.date,
+        )

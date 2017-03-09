@@ -1,11 +1,17 @@
+{% load humanize %}
+
 <h1>Expenses</h1>
+
+<p>
+    {{ object_list.count }} expenses, total: ${{ total|intcomma }}
+</p>
 
 <ul>
     {% for object in object_list %}
         <li>
             <a href="{{ object.id }}/">{{ object.title }}</a>:
-            {{ object.amount }}
-            ({{ object.date }})
+            ${{ object.amount }}
+            (<span title="{{ object.date }}">{{ object.date|naturalday }}</span>)
         </li>
     {% endfor %}
 </ul>

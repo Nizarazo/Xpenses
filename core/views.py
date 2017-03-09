@@ -6,8 +6,11 @@ from . import models
 def expense_list(request):
     qs = models.Expense.objects.all()
 
+    total = sum(o.amount for o in qs)  # TODO: use aggregate instead
+
     return render(request, "core/expense_list.html", {
         'object_list': qs,
+        'total': total,
     })
 
 

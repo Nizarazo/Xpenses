@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'django_extensions',
+    'bootstrap3',
 
     # my apps
     'core',

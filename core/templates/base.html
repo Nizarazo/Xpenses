@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles bootstrap3 %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,15 +43,7 @@
 
 <div class="container">
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %}
-                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
+    {% bootstrap_messages %}
 
     {% block content %}
         CONTENT GOES HERE

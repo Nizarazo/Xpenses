@@ -7,7 +7,19 @@
 
 {% block content %}
 
-    <h1>Expenses <span>for today</span></h1>
+    <h1>
+
+    {% if q %}
+        Expenses for: "<i>{{ q }}</i>"
+    {% else %}
+        All Expenses
+    {% endif %}
+
+    {% if year %}
+        ({{ year }})
+    {% endif %}
+
+    </h1>
 
     <p id="list-info">
         <span class="glyphicon glyphicon-tree-conifer"></span>

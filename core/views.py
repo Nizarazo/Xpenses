@@ -1,12 +1,10 @@
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
 from . import models
 
 
 def expense_list(request, year=None, month=None):
-
-    if 'q' in request.GET:
-        assert False, request.GET['q']
 
     qs = models.Expense.objects.order_by('-date', '-id')
 
@@ -15,11 +13,19 @@ def expense_list(request, year=None, month=None):
     if month:
         qs = qs.filter(date__month=month)
 
+    q = request.GET.get('q')
+
+    if q:
+        qs = qs.filter(Q(title__contains=q) | Q(comments__contains=q))
+
     total = sum(o.amount for o in qs)  # TODO: use aggregate instead
 
     return render(request, "core/expense_list.html", {
         'object_list': qs,
         'total': total,
+        'year': year,
+        'month': month,
+        'q': q,
     })
 
 

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # my apps
     'core',
+    'feedback',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/ben-el/'
+
+MANAGERS = (
+    ('Super Sysop', 'sysop@company.com'),
+    ('Super Manager', 'manager@company.com'),
+)
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

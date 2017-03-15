@@ -51,3 +51,18 @@ def expense_create(request):
     return render(request, 'core/expense_form.html', {
         'form': form,
     })
+
+
+def comment_create(request):
+    if request.method == "POST":
+        form = forms.CommentForm(request.POST)
+        if form.is_valid():
+            o = form.save()
+            messages.success(request, "Comment created.")
+            return redirect(o.expense)
+    else:
+        form = forms.CommentForm()
+
+    return render(request, 'core/comment_form.html', {
+        'form': form,
+    })

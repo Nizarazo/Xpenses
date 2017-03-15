@@ -9,7 +9,9 @@ from . import forms
 
 @login_required
 def expense_list(request, year=None, month=None):
-    qs = models.Expense.objects.order_by('-date', '-id')
+    qs = models.Expense.objects.filter(
+        user=request.user,
+    ).order_by('-date', '-id')
 
     if year:
         qs = qs.filter(date__year=year)
@@ -34,12 +36,13 @@ def expense_list(request, year=None, month=None):
 
 @login_required
 def expense_detail(request, pk):
-    o = get_object_or_404(models.Expense, pk=pk)
+    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
 
     if request.method == "POST":
         form = forms.CommentForm(request.POST)
         if form.is_valid():
             form.instance.expense = o
+            form.instance.user = request.user
             form.save()
             messages.success(request, "Comment created.")
             return redirect(o)
@@ -57,6 +60,7 @@ def expense_create(request):
     if request.method == "POST":
         form = forms.ExpenseForm(request.POST)
         if form.is_valid():
+            form.instance.user = request.user
             o = form.save()
             messages.success(request, "Expense created.")
             return redirect(o)

@@ -31,8 +31,11 @@ class Command(BaseCommand):
             except IntegrityError:
                 pass
 
+        users = list(User.objects.all())
+
         for i in range(options['n']):
             o = Expense(
+                user=random.choice(users),
                 date=datetime.date(
                     random.randint(2010, 2017),
                     random.randint(1, 12),
@@ -47,5 +50,6 @@ class Command(BaseCommand):
 
             for j in range(random.randint(3, 10)):
                 o.comments.create(
+                    user=random.choice(users),
                     content=paragraph(random.randint(1, 6))
                 )

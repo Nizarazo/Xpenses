@@ -49,7 +49,7 @@
             <li class="list-group-item">
                 {{ comment.content|linebreaksbr }}
                 <br>
-                <i>@{{ comment.created_at }}</i>
+                <i>{{ comment.user }} @ {{ comment.created_at }}</i>
 
             </li>
 

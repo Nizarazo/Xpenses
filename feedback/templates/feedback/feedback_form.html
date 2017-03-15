@@ -1,13 +1,10 @@
-<form method="post">
+<form method="post" novalidate>
 
     {% csrf_token %}
 
-    Name: <input type="text" name="name">
-    <br>
-    Email: <input type="email" name="email">
-    <br>
-    Content: <textarea name="content"></textarea>
-    <br>
+    <ul>
+        {{ form.as_ul }}
+    </ul>
 
     <button>Send</button>
 

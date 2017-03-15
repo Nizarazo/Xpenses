@@ -7,13 +7,21 @@ from django.core.management.base import BaseCommand
 from core.models import Expense
 
 
+def paragraph(length=6):
+    return "\n".join([silly.sentence().title() for x in range(0, length)])
+
+
 class Command(BaseCommand):
     help = "Creates dummy expenses"
 
     def add_arguments(self, parser):
         parser.add_argument('n', type=int)
+        parser.add_argument('--delete', default=False, action='store_true')
 
     def handle(self, *args, **options):
+        if options['delete']:
+            Expense.objects.all().delete()
+
         for i in range(options['n']):
             o = Expense(
                 date=datetime.date(
@@ -23,7 +31,12 @@ class Command(BaseCommand):
                 ),
                 title=silly.a_thing(),
                 amount=random.randint(1, 1000),
-                description=silly.paragraph(),
+                description=paragraph(random.randint(2, 4)),
             )
             o.full_clean()
             o.save()
+
+            for j in range(random.randint(3, 10)):
+                o.comments.create(
+                    content=paragraph(random.randint(1, 6))
+                )

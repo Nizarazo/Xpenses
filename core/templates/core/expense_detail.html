@@ -22,4 +22,18 @@
             {{ object.description|linebreaksbr }}
         </li>
     </ul>
+
+    <h2>Comments ({{ object.comments.count }})</h2>
+    <ul class="list-group">
+        {% for comment in object.comments.all %}
+            <li class="list-group-item">
+                {{ comment.content|linebreaksbr }}
+                <br>
+                <i>@{{ comment.created_at }}</i>
+
+            </li>
+
+        {% endfor %}
+
+    </ul>
 {% endblock %}

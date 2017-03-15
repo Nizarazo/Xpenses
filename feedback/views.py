@@ -15,7 +15,6 @@ def send_feedback_email(data):
 
 
 def feedback_view(request):
-
     if request.method == "POST":
         form = forms.FeedbackForm(request.POST)
         if form.is_valid():

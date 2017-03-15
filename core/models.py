@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Expense(models.Model):
@@ -15,3 +16,6 @@ class Expense(models.Model):
             self.amount,
             self.date,
         )
+
+    def get_absolute_url(self):
+        return reverse("expenses:detail", args=(self.id, ))

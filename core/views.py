@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from . import models
+from . import forms
 
 
 def expense_list(request, year=None, month=None):
@@ -31,13 +33,21 @@ def expense_list(request, year=None, month=None):
 
 def expense_detail(request, pk):
     o = get_object_or_404(models.Expense, pk=pk)
-    # try:
-    #     o = models.Expense.objects.get(pk=pk)
-    # except models.Expense.DoesNotExist:
-    #     raise Http404()
-
-    # return HttpResponse("The title is: {}".format(o.title))
-
     return render(request, "core/expense_detail.html", {
         'object': o,
+    })
+
+
+def expense_create(request):
+    if request.method == "POST":
+        form = forms.ExpenseForm(request.POST)
+        if form.is_valid():
+            o = form.save()
+            messages.success(request, "Expense created.")
+            return redirect(o)
+    else:
+        form = forms.ExpenseForm()
+
+    return render(request, 'core/expense_form.html', {
+        'form': form,
     })

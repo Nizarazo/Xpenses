@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize bootstrap3 %}
 
 {% block page_title %}
     Expense #{{ object.id }}
@@ -25,6 +25,26 @@
 
     <h2>Comments ({{ object.comments.count }})</h2>
     <ul class="list-group">
+
+        <li class="list-group-item">
+            <form method="post" novalidate>
+
+                {% csrf_token %}
+
+                {% bootstrap_form form %}
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "star" %} Create
+                    </button>
+                {% endbuttons %}
+
+            </form>
+
+        </li>
+
+
+
         {% for comment in object.comments.all %}
             <li class="list-group-item">
                 {{ comment.content|linebreaksbr }}

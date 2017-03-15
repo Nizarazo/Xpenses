@@ -12,4 +12,6 @@ class ExpenseForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = models.Comment
-        fields = "__all__"
+        exclude = (
+            'expense',
+        )

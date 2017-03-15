@@ -28,3 +28,8 @@ class Comment(models.Model):
     # TODO: add user
     content = models.TextField()
 
+    class Meta:
+        ordering = (
+            '-created_at',
+        )
+

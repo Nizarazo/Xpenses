@@ -17,10 +17,20 @@ import random
 
 from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework import routers
+
+from core.api_views import ExpenseViewSet, CommentViewSet
+
+router = routers.DefaultRouter()
+router.register("expense", ExpenseViewSet)
+router.register("comment", CommentViewSet)
 
 urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'', include('core.urls')),
     url(r'^feedback/', include('feedback.urls')),
     url(r'^admin/', admin.site.urls),
+
+    url(r'^api/', include(router.urls)),
+
 ]

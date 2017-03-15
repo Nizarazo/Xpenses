@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'django_extensions',
     'bootstrap3',
+    'rest_framework',
 
     # my apps
     'core',
@@ -138,3 +139,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAdminUser',
+    # ],
+    'PAGE_SIZE': 10,
+}

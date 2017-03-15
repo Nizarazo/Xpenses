@@ -25,6 +25,7 @@ class Expense(models.Model):
         return reverse("expenses:detail", args=(self.id,))
 
 
+
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              related_name='comments',

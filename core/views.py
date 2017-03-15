@@ -18,7 +18,7 @@ def expense_list(request, year=None, month=None):
     q = request.GET.get('q')
 
     if q:
-        qs = qs.filter(Q(title__contains=q) | Q(comments__contains=q))
+        qs = qs.filter(Q(title__contains=q) | Q(description__contains=q))
 
     total = sum(o.amount for o in qs)  # TODO: use aggregate instead
 

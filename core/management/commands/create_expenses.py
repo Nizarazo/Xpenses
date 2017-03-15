@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 ),
                 title=silly.a_thing(),
                 amount=random.randint(1, 1000),
-                comments=silly.paragraph(),
+                description=silly.paragraph(),
             )
             o.full_clean()
             o.save()

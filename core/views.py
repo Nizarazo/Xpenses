@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -6,8 +7,8 @@ from . import models
 from . import forms
 
 
+@login_required
 def expense_list(request, year=None, month=None):
-
     qs = models.Expense.objects.order_by('-date', '-id')
 
     if year:
@@ -31,6 +32,7 @@ def expense_list(request, year=None, month=None):
     })
 
 
+@login_required
 def expense_detail(request, pk):
     o = get_object_or_404(models.Expense, pk=pk)
 
@@ -50,6 +52,7 @@ def expense_detail(request, pk):
     })
 
 
+@login_required
 def expense_create(request):
     if request.method == "POST":
         form = forms.ExpenseForm(request.POST)
@@ -63,5 +66,3 @@ def expense_create(request):
     return render(request, 'core/expense_form.html', {
         'form': form,
     })
-
-

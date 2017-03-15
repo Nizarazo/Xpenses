@@ -2,7 +2,9 @@ import datetime
 import random
 
 import silly
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError
 
 from core.models import Expense
 
@@ -21,6 +23,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['delete']:
             Expense.objects.all().delete()
+
+        for i in range(10):
+            try:
+                User.objects.create_user("user{}".format(i),
+                                         password="abcd1234")
+            except IntegrityError:
+                pass
 
         for i in range(options['n']):
             o = Expense(

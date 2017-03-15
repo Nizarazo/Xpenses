@@ -1,15 +1,24 @@
 <nav class="navbar navbar-default">
     <div class="container">
+
         <div class="navbar-header">
             <a class="navbar-brand" href="{% url "expenses:list" %}">
                 💵 Xpenses
             </a>
         </div>
 
+
         <ul class="nav navbar-nav">
             <li><a href="{% url "expenses:create" %}">Add Expense</a></li>
             <li><a href="{% url "feedback:main" %}">Send Feedback</a></li>
+            {% if user.id %}
+                <li><span class="navbar-text"><b>{{ user }}</b></span></li>
+                <li><a href="{% url "logout" %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url "login" %}">Login</a></li>
+            {% endif %}
         </ul>
+
 
         <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
@@ -18,5 +27,6 @@
             </div>
             <button type="submit" class="btn btn-default">Search</button>
         </form>
+
     </div>
 </nav>

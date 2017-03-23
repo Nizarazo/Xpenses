@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize bootstrap3 %}
 
 {% block page_title %}
     Expense List
@@ -36,5 +36,7 @@
             </li>
         {% endfor %}
     </ul>
+
+    {% bootstrap_pagination page_obj %}
 
 {% endblock %}

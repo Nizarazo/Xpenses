@@ -1,110 +1,188 @@
+import random
+
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, Sum
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.views.generic import DeleteView
+from django.views.generic import DetailView
+from django.views.generic import ListView
+from django.views.generic import TemplateView
+from django.views.generic import UpdateView
 
-from . import models
 from . import forms
+from . import models
 
 
-@login_required
-def expense_list(request, year=None, month=None):
-    qs = models.Expense.objects.filter(
-        user=request.user,
-    ).order_by('-date', '-id')
+# def view(request):
+#     return response
+#
+#
+# class View:
+#     @classmethod
+#     def as_view(cls, self):
+#         def view(request, *args, **kwargs):
+#             print("!!!!!!!!!!!!")
+#             o = cls()
+#             return o.dispatch(request, *args, **kwargs)
+#
+#         return view
+#
+#     def __init__(self):
+#         pass
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         self.request = request
+#         self.args = args
+#         self.kwargs = kwargs
+#         f = getattr(self, request.method.lower())
+#         return f(request, *args, **kwargs)
 
-    if year:
-        qs = qs.filter(date__year=year)
-    if month:
-        qs = qs.filter(date__month=month)
+# class MyView(View):
+#     def get(self, request, *args, **kwargs):
+#         assert False, "KUKU"
 
-    q = request.GET.get('q')
+# class ExpenseListView(LoginRequiredMixin, TemplateView):
+#     template_name = "core/expense_list.html"
+#
+#     def get_context_data(self, **kwargs):
+#         year = self.kwargs.get('year')
+#         month = self.kwargs.get('month')
+#         d = super().get_context_data(**kwargs)
+#         qs = models.Expense.objects.filter(
+#             user=self.request.user,
+#         ).order_by('-date', '-id')
+#
+#         if year:
+#             qs = qs.filter(date__year=year)
+#         if month:
+#             qs = qs.filter(date__month=month)
+#
+#         q = self.request.GET.get('q')
+#
+#         if q:
+#             qs = qs.filter(Q(title__contains=q) | Q(description__contains=q))
+#
+#         total = sum(o.amount for o in qs)  # TODO: use aggregate instead
+#
+#         d.update({
+#             'object_list': qs,
+#             'total': total,
+#             'year': year,
+#             'month': month,
+#             'q': q,
+#         })
+#         return d
+class MyView(TemplateView):
+    template_name = "core/my_template.html"
 
-    if q:
-        qs = qs.filter(Q(title__contains=q) | Q(description__contains=q))
+    udi = random.randint(1, 10)
 
-    total = sum(o.amount for o in qs)  # TODO: use aggregate instead
+    def something(self):
+        return random.randint(1, 10)
 
-    return render(request, "core/expense_list.html", {
-        'object_list': qs,
-        'total': total,
-        'year': year,
-        'month': month,
-        'q': q,
-    })
+    # def get_context_data(self, **kwargs):
+    #     d =  super().get_context_data(**kwargs)
+    #     d['david'] = 182736218763
+    #     return d
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            david=random.randint(1, 10),
+            **kwargs
+        )
 
 
-@login_required
-def expense_detail(request, pk):
-    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
+class ExpenseMixin(LoginRequiredMixin):
+    model = models.Expense
+    form_class = forms.ExpenseForm
 
-    if request.method == "POST":
-        form = forms.CommentForm(request.POST)
-        if form.is_valid():
-            form.instance.expense = o
-            form.instance.user = request.user
-            form.save()
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            user=self.request.user,
+        )
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['categories'].queryset = self.request.user.categories.all()
+        return form
+
+
+# class SpecialExpenseListView(ExpenseListView):
+#     template_name = "core/expense_special.html"
+
+class ExpenseListView(ExpenseMixin, ListView):
+    paginate_by = 20
+
+    def get_queryset(self):
+        self.year = self.kwargs.get('year')
+        self.month = self.kwargs.get('month')
+        self.q = self.request.GET.get('q')
+
+        qs = super().get_queryset().order_by('-date', '-id')
+
+        if self.year:
+            qs = qs.filter(date__year=self.year)
+
+        if self.month:
+            qs = qs.filter(date__month=self.month)
+
+        if self.q:
+            qs = qs.filter(
+                Q(title__contains=self.q) | Q(description__contains=self.q))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+
+        d = super().get_context_data(**kwargs)
+
+        self.total = self.get_queryset().aggregate(
+            x=Sum('amount')
+        ).get('x')
+
+        d.update({
+            'total': self.total,
+            'year': self.year,
+            'month': self.month,
+            'q': self.q,
+        })
+        return d
+
+
+class ExpenseDetailView(ExpenseMixin, DetailView):
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.form = forms.CommentForm(request.POST)
+        if self.form.is_valid():
+            self.form.instance.expense = self.object
+            self.form.instance.user = request.user
+            self.form.save()
             messages.success(request, "Comment created.")
-            return redirect(o)
-    else:
-        form = forms.CommentForm()
+            return redirect(self.object)
 
-    return render(request, "core/expense_detail.html", {
-        'object': o,
-        'form': form,
-    })
+    def get(self, request, *args, **kwargs):
+        self.form = forms.CommentForm()
+        return super().get(request, *args, **kwargs)
 
 
-def get_expense_form(user, *args, **kwargs):
-    form = forms.ExpenseForm(*args, **kwargs)
-    form.fields['categories'].queryset = user.categories.all()
-    return form
+class ExpenseCreateView(ExpenseMixin, CreateView):
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        resp = super().form_valid(form)
+        messages.success(self.request, "Expense created.")
+        return resp
 
 
-@login_required
-def expense_create(request):
-    if request.method == "POST":
-        form = get_expense_form(request.user, request.POST)
-        if form.is_valid():
-            form.instance.user = request.user
-            o = form.save()
-            messages.success(request, "Expense created.")
-            return redirect(o)
-    else:
-        form = get_expense_form(request.user)
-
-    return render(request, 'core/expense_form.html', {
-        'form': form,
-    })
+class ExpenseUpdateView(ExpenseMixin, UpdateView):
+    class ExpenseCreateView(ExpenseMixin, CreateView):
+        def form_valid(self, form):
+            resp = super().form_valid(form)
+            messages.success(self.request, "Expense updated.")
+            return resp
 
 
-@login_required
-def expense_update(request, pk):
-    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
-
-    if request.method == "POST":
-        form = get_expense_form(request.user, request.POST, instance=o)
-        if form.is_valid():
-            o = form.save()
-            messages.success(request, "Expense updated.")
-            return redirect(o)
-    else:
-        form = get_expense_form(request.user, instance=o)
-
-    return render(request, 'core/expense_form.html', {
-        'form': form,
-    })
-
-
-@login_required
-def expense_delete(request, pk):
-    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
-
-    if request.method == "POST":
-        o.delete()
-        messages.success(request, "Expense updated.")
-        return redirect("expenses:list")
-
-    return render(request, 'core/expense_confirm_delete.html', {
-        "object": o,
-    })
+class ExpenseDeleteView(ExpenseMixin, DeleteView):
+    success_url = reverse_lazy("expenses:list")

@@ -58,8 +58,13 @@ class Command(BaseCommand):
                 o.full_clean()
                 o.save()
 
-                o.categories = random.sample(
-                    list(o.user.categories.all()), random.randint(0, 2))
+                cats = random.sample(list(o.user.categories.all()),
+                                       random.randint(0, 2))
+
+                o.categories = cats
+
+                # for c in cats:
+                #     o.categories.create(category=c)
 
                 for j in range(random.randint(3, 10)):
                     o.comments.create(

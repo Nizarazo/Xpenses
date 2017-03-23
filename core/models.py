@@ -42,6 +42,36 @@ class Expense(models.Model):
         return reverse("expenses:detail", args=(self.id,))
 
 
+# class ExpenseCategory(models.Model):
+#     expense = models.ForeignKey(Expense, related_name='categories',
+#                                 on_delete=models.CASCADE)
+#     category = models.ForeignKey(Category, related_name='expenses',
+#                                 on_delete=models.CASCADE)
+#
+#     created_at = models.DateTimeField()
+#     priority = models.IntegerField()
+#
+#     class Meta:
+#         unique_together = (
+#             ('expense', 'category'),
+#         )
+
+# class Restaurant(models.Model):
+#     pass
+#
+#
+# class Tourist(models.Model):
+#     pass
+#
+#
+# class Visit(models.Model):
+#     restaurant = models.ForeignKey(Restaurant)
+#     tourist = models.ForeignKey(Tourist)
+#     date = models.DateField()
+#     review = models.TextField()
+
+
+
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              related_name='comments',

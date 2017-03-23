@@ -94,3 +94,17 @@ def expense_update(request, pk):
     return render(request, 'core/expense_form.html', {
         'form': form,
     })
+
+
+@login_required
+def expense_delete(request, pk):
+    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
+
+    if request.method == "POST":
+        o.delete()
+        messages.success(request, "Expense updated.")
+        return redirect("expenses:list")
+
+    return render(request, 'core/expense_confirm_delete.html', {
+        "object": o,
+    })

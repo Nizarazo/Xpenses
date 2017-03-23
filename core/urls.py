@@ -17,4 +17,6 @@ urlpatterns = [
         name="detail"),
     url(r'^([0-9]+)/edit/$', views.expense_update,
         name="update"),
+    url(r'^([0-9]+)/delete/$', views.expense_delete,
+        name="delete"),
 ]

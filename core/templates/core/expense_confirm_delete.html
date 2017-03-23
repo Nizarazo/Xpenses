@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block page_title %}
+    Delete Expense #{{ object.id }}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        Delete Expense #{{ object.id }}
+    </h1>
+
+    <form method="post" novalidate>
+
+        {% csrf_token %}
+
+        <p>
+            Are you sure?
+        </p>
+
+        {% buttons %}
+            <button type="submit" class="btn btn-danger">
+                {% bootstrap_icon "trash" %}
+                    Delete
+            </button>
+            <a class="btn btn-default" href="{% url "expenses:detail" object.id %}">Cancel</a>
+
+        {% endbuttons %}
+
+    </form>
+{% endblock %}

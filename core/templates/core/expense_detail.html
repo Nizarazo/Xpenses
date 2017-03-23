@@ -7,6 +7,7 @@
 
 {% block content %}
     <span class="pull-right">
+    <a class="btn btn-warning" href="{% url "expenses:delete" object.id %}">Delete</a>
     <a class="btn btn-default" href="{% url "expenses:update" object.id %}">Edit</a>
 
     </span>

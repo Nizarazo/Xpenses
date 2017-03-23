@@ -18,6 +18,14 @@
             {{ object.amount }}
         </li>
         <li>
+            <b>Categories:</b>
+            <ul class="list-inline">
+            {% for cat in object.categories.all %}
+                <li><span class="badge">{{ cat }}</span></li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li>
             <b>description:</b>
             {{ object.description|linebreaksbr }}
         </li>

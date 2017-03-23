@@ -13,6 +13,8 @@ urlpatterns = [
         kwargs={'year': None}),
     url(r'^month/([0-9]{4})/([0-9]{1,2})/$', views.expense_list),
 
-    url(r'^detail/([0-9]+)/$', views.expense_detail,
+    url(r'^([0-9]+)/$', views.expense_detail,
         name="detail"),
+    url(r'^([0-9]+)/edit/$', views.expense_update,
+        name="update"),
 ]

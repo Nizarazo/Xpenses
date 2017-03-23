@@ -6,6 +6,10 @@
 {% endblock %}
 
 {% block content %}
+    <span class="pull-right">
+    <a class="btn btn-default" href="{% url "expenses:update" object.id %}">Edit</a>
+
+    </span>
     <h1>Expense #{{ object.id }}: {{ object.title }}</h1>
 
     <ul>
@@ -20,9 +24,9 @@
         <li>
             <b>Categories:</b>
             <ul class="list-inline">
-            {% for cat in object.categories.all %}
-                <li><span class="badge">{{ cat }}</span></li>
-            {% endfor %}
+                {% for cat in object.categories.all %}
+                    <li><span class="badge">{{ cat }}</span></li>
+                {% endfor %}
             </ul>
         </li>
         <li>

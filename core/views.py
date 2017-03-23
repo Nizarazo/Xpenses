@@ -55,17 +55,41 @@ def expense_detail(request, pk):
     })
 
 
+def get_expense_form(user, *args, **kwargs):
+    form = forms.ExpenseForm(*args, **kwargs)
+    form.fields['categories'].queryset = user.categories.all()
+    return form
+
+
 @login_required
 def expense_create(request):
     if request.method == "POST":
-        form = forms.ExpenseForm(request.POST)
+        form = get_expense_form(request.user, request.POST)
         if form.is_valid():
             form.instance.user = request.user
             o = form.save()
             messages.success(request, "Expense created.")
             return redirect(o)
     else:
-        form = forms.ExpenseForm()
+        form = get_expense_form(request.user)
+
+    return render(request, 'core/expense_form.html', {
+        'form': form,
+    })
+
+
+@login_required
+def expense_update(request, pk):
+    o = get_object_or_404(models.Expense, pk=pk, user=request.user)
+
+    if request.method == "POST":
+        form = get_expense_form(request.user, request.POST, instance=o)
+        if form.is_valid():
+            o = form.save()
+            messages.success(request, "Expense updated.")
+            return redirect(o)
+    else:
+        form = get_expense_form(request.user, instance=o)
 
     return render(request, 'core/expense_form.html', {
         'form': form,
